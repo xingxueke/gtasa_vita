@@ -14,6 +14,35 @@ The port works by loading the official Android ARMv7 executable in memory, resol
 
 ## Changelog
 
+### v1.5
+
+- Added option to allow cut radio songs to play.
+  - See [MUSIC.md](MUSIC.md) for how to restore removed songs.
+- Added MP3 fuzzy seek option to improve loading speed.
+- Added custom codes to activate mobile cheats:
+  - "THEFLOW" - Invincibility
+  - "RINNEGATAMANTE" - Weapon set 4
+- Fixed mixed cheat codes.
+- Fixed plane rudder controls.
+- Improved the "Resume" menu entry to load the latest save (manual and auto save).
+  - Selecting the "Quit Game" menu entry will now create a quick-save which can be loaded via the "Resume" menu entry.
+- Improved performance by redirecting mpg123 to our own library.
+- Improved performance by using better algorithms in vitaGL.
+
+### v1.4
+
+- Updated openal for better performance. Thanks to isage.
+- Fixed crash when selecting japanese/russian language. Thanks to adjutantt.
+- Improved control scheme. Thanks to XirXes and darthbellic.
+
+### v1.3
+
+- Added ability to remap controls with `ux0:data/gtasa/controls.txt`. Thanks to PoisonPoisonPoison.
+- Added default vita-enhanced controls schema by darthbellic.
+- Added support for co-op rampage missions when using PS3 scripts. See `Tips and Tricks` for instructions.
+- Added option to enable high detail player textures.
+- Switched to OpenAL-SDL for better performance.
+
 ### v1.2
 
 - Fixed memory leak in vitaGL leading to corrupted textures.
@@ -37,7 +66,7 @@ The port works by loading the official Android ARMv7 executable in memory, resol
 
 ## Setup Instructions (For End Users)
 
-(If you have already installed the game and want to update to a newer release, you can simply install [GTASA.vpk](https://github.com/TheOfficialFloW/gtasa_vita/releases/download/v1.2/GTASA.vpk) on your *PS Vita*).
+(If you have already installed the game and want to update to a newer release, you can simply install [GTASA.vpk](https://github.com/TheOfficialFloW/gtasa_vita/releases/download/v1.5/GTASA.vpk) on your *PS Vita*).
 
 In order to properly install the game, you'll have to follow these steps precisely:
 
@@ -58,9 +87,9 @@ In order to properly install the game, you'll have to follow these steps precise
 - Still in the apk, extract the file `libGTASA.so` from the `lib/armeabi-v7a` folder to `ux0:data/gtasa`. 
 - Open the `main.8.com.rockstargames.gtasa.obb` with your zip explorer (`.obb` files are zip files just like `.apk` files so just rename the `.obb` to `.zip`) and extract the contents to `ux0:data/gtasa`.
 - Same as before, open the `patch.8.com.rockstargames.gtasa.obb` with the zip explorer and extract the contents inside the zip to `ux0:data/gtasa`.
-- Download the [gamefiles.zip](https://github.com/TheOfficialFloW/gtasa_vita/releases/download/v1.2/gamefiles.zip) and extract the contents to `ux0:data/gtasa` (if it ask about overwriting files, say yes).
+- Download the [gamefiles.zip](https://github.com/TheOfficialFloW/gtasa_vita/releases/download/v1.5/gamefiles.zip) and extract the contents to `ux0:data/gtasa` (if it ask about overwriting files, say yes).
 - **Optional**: For a more authentic console experience, copy the file `ux0:data/gtasa/data/360Default1280x720.cfg` to `ux0:data/gtasa/` and rename it from `360Default1280x720.cfg` to `Adjustable.cfg`. This file is a leftover from the Xbox 360 version and provides you the console HUD (e.g. radar on bottom left).
-- Install [GTASA.vpk](https://github.com/TheOfficialFloW/gtasa_vita/releases/download/v1.2/GTASA.vpk) on your *PS Vita*.
+- Install [GTASA.vpk](https://github.com/TheOfficialFloW/gtasa_vita/releases/download/v1.5/GTASA.vpk) on your *PS Vita*.
 
 If you have followed the steps correctly, this is how your `ux0:data/gtasa` folder should look like.
 
@@ -76,10 +105,20 @@ You can launch the Configurator app by clicking on the `Configuration` button lo
 
 ## Tips and Tricks
 
-- In order to reduce occasional stutters in-game, delete both `ux0:data/gtasa/scache_small_low.txt` and `ux0:data/gtasa/scache_small.txt`, then create a copy of the `ux0:data/gtasa/scache.txt` file to have two version of it. (for example `scache(1).txt` so in the end you end up with both `scache.txt` and `scache(1).txt` inside the `ux0:data/gtasa/` folder), then rename `scache.txt` to `scache_small.txt` and `scache(1).txt` to `scache_small_low.txt` . This will however make the loading screen longer since it needs to compile more shaders ahead.
-- You can input PC cheats by pressing L+SELECT to open the on-screen keyboard. See [CHEATS.md](CHEATS.md) for available and unavailable cheats (you can input cheat codes in lowercase as well as uppercase).
+### Gameplay
+
+- You can input PC cheats by pressing **L** + **SELECT** to open the on-screen keyboard. See [CHEATS.md](CHEATS.md) for available and unavailable cheats (you can input cheat codes in lowercase as well as uppercase).
 - The L2/R2 buttons are mapped to the rear touchpad on the top and the L3/R3 buttons are mapped to the front touchpad on the bottom. With v1.2 and higher, you can map L2/R2 to the front touchpad on the top.
 - You can open the map by holding START and then releasing.
+- There is a bug which causes invisible peds when you load a save straight after launching. To avoid that issue, start a new game and *then* load your save.
+- You can get local freeroam coop and rampages working by replacing the main scripts with those of the PS3 version. See [COOP.md](COOP.md).
+- Due to expired licensing, some songs were cut from the game. See [MUSIC.md](MUSIC.md) for a list of removed tracks and a guide on how to restore them.
+
+### Performance
+
+- In order to reduce occasional stutters in-game, delete both `ux0:data/gtasa/scache_small_low.txt` and `ux0:data/gtasa/scache_small.txt`, then create a copy of the `ux0:data/gtasa/scache.txt` file to have two version of it. (for example `scache(1).txt` so in the end you end up with both `scache.txt` and `scache(1).txt` inside the `ux0:data/gtasa/` folder), then rename `scache.txt` to `scache_small.txt` and `scache(1).txt` to `scache_small_low.txt` . This will however make the loading screen longer since it needs to compile more shaders ahead.
+  - If the folder `ux0:data/gtasa/cache` contains much more than 300 files, it's recommended to delete the folder and have it rebuilt.
+
 - In order to save storage on your Memory Card, you can safely delete all files in sub-folders of `ux0:data/gtasa/texdb` which end with:
   - `.dxt.dat`, `.dxt.tmb`, `dxt.toc`
   - `.etc.dat`, `.etc.tmb`, `etc.toc`
@@ -90,10 +129,20 @@ In order to build the loader, you'll need a [vitasdk](https://github.com/vitasdk
 You can find a precompiled version here: [Linux](https://github.com/vitasdk/buildscripts/suites/1824103476/artifacts/35161735) / [Windows](https://github.com/vitasdk/buildscripts/suites/1836262288/artifacts/35501612).  
 Additionally, you'll need these libraries to be compiled as well with `-mfloat-abi=softfp` added to their CFLAGS:
 
+- [mpg123](http://www.mpg123.de/download/mpg123-1.25.10.tar.bz2)
+
+  - Apply [mpg123.patch](https://github.com/vitasdk/packages/blob/master/mpg123/mpg123.patch) using `patch -Np0 -i mpg123.patch`.
+
+  - ```bash
+    autoreconf -fi
+    CFLAGS="-DPSP2 -mfloat-abi=softfp" ./configure --host=arm-vita-eabi --prefix=$VITASDK/arm-vita-eabi --disable-shared --enable-static --enable-fifo=no --enable-ipv6=no --enable-network=no --enable-int-quality=no --with-cpu=neon --with-default-audio=dummy --with-optimization=3
+    make install
+    ```
+
 - [openal-soft](https://github.com/isage/openal-soft/tree/vita-1.19.1)
 
   - ```bash
-    mkdir build && cd build
+    cd build
     cmake -DCMAKE_TOOLCHAIN_FILE=${VITASDK}/share/vita.toolchain.cmake -DCMAKE_BUILD_TYPE=Release -DCMAKE_C_FLAGS=-mfloat-abi=softfp .. && make install
     ```
 

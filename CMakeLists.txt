@@ -14,7 +14,7 @@ set(VITA_APP_NAME "GTA: SA")
 set(VITA_TITLEID  "GTASA0000")
 set(VITA_MKSFOEX_FLAGS "-d ATTRIBUTE2=12")
 
-set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -g -Wl,-q -Wall -O3 -mfloat-abi=softfp")
+set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -g -Wl,-q -Wall -O3 -mfloat-abi=softfp -fno-builtin-memcpy -fno-builtin-memset")
 set(CMAKE_CXX_FLAGS "${CMAKE_C_FLAGS} -std=c++11 -Wno-write-strings")
 
 add_executable(GTASA
@@ -24,6 +24,7 @@ add_executable(GTASA
   loader/fios.c
   loader/so_util.c
   loader/jni_patch.c
+  loader/mpg123_patch.c
   loader/openal_patch.c
   loader/opengl_patch.c
   loader/gfx_patch.c
@@ -37,11 +38,10 @@ target_link_libraries(GTASA
   m
   stdc++
   openal
-  SDL2
-  vita2d
   vitaGL
   vitashark
   mathneon
+  mpg123
   taihen_stub
   kubridge_stub
   SceAppMgr_stub
@@ -54,7 +54,6 @@ target_link_libraries(GTASA
   SceFios2_stub
   SceGxm_stub
   SceLibcBridge_stub
-  SceHid_stub
   SceShaccCg_stub
   SceSysmodule_stub
   ScePower_stub
