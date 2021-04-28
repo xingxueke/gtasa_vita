@@ -6,6 +6,7 @@
  * of the MIT license.  See the LICENSE file for details.
  */
 
+#include <psp2/io/fcntl.h>
 #include <psp2/ctrl.h>
 #include <psp2/touch.h>
 #include <vitaGL.h>
@@ -193,7 +194,7 @@ float GetGamepadAxis(int port, int axis) {
                 if (touch_front.report[i].x >= config.touch_x_margin)
                   if (axis == 4) val = 1.0f;
               } else {
-                if (touch_back.report[i].x < (panelInfoFront.maxAaX - config.touch_x_margin))
+                if (touch_front.report[i].x < (panelInfoFront.maxAaX - config.touch_x_margin))
                   if (axis == 5) val = 1.0f;
               }
             }

@@ -8,7 +8,12 @@
 
 #include <psp2/io/dirent.h>
 #include <psp2/io/fcntl.h>
+#include <psp2/kernel/clib.h>
+#include <psp2/kernel/processmgr.h>
 #include <psp2/kernel/threadmgr.h>
+#include <psp2/appmgr.h>
+#include <psp2/apputil.h>
+#include <psp2/ctrl.h>
 #include <psp2/power.h>
 #include <psp2/touch.h>
 #include <taihen.h>
@@ -51,11 +56,15 @@ int _newlib_heap_size_user = MEMORY_NEWLIB_MB * 1024 * 1024;
 
 SceTouchPanelInfo panelInfoFront, panelInfoBack;
 
-void *memcpy(void *dest, const void *src, size_t n) {
+void *__wrap_memcpy(void *dest, const void *src, size_t n) {
   return sceClibMemcpy(dest, src, n);
 }
 
-void *memset(void *s, int c, size_t n) {
+void *__wrap_memmove(void *dest, const void *src, size_t n) {
+  return sceClibMemmove(dest, src, n);
+}
+
+void *__wrap_memset(void *s, int c, size_t n) {
   return sceClibMemset(s, c, n);
 }
 
@@ -586,8 +595,8 @@ extern void *__cxa_guard_acquire;
 extern void *__cxa_guard_release;
 
 void patch_game(void) {
-  *(int *)so_find_addr("UseCloudSaves") = 0;
-  *(int *)so_find_addr("UseTouchSense") = 0;
+  *(uint8_t *)so_find_addr("UseCloudSaves") = 0;
+  *(uint8_t *)so_find_addr("UseTouchSense") = 0;
 
   if (config.disable_detail_textures)
     *(int *)so_find_addr("gNoDetailTextures") = 1;
@@ -691,6 +700,9 @@ void patch_game(void) {
   // fix free aiming
   hook_thumb((uintptr_t)text_base + 0x004C6D16, (uintptr_t)text_base + 0x004C6E28 + 0x1);
 
+  // Disable auto landing gear deployment/retraction
+  hook_thumb((uintptr_t)text_base + 0x0057629C, (uintptr_t)text_base + 0x005762BC + 0x1);
+
   hook_thumb(so_find_addr("__cxa_guard_acquire"), (uintptr_t)&__cxa_guard_acquire);
   hook_thumb(so_find_addr("__cxa_guard_release"), (uintptr_t)&__cxa_guard_release);
 
@@ -793,6 +805,8 @@ void glShaderSourceHook(GLuint shader, GLsizei count, const GLchar **string, con
 
     shaderSize = *length;
     shaderBuf = shark_compile_shader_extended(*string, &shaderSize, sharkType, SHARK_OPT_UNSAFE, SHARK_ENABLE, SHARK_ENABLE, SHARK_ENABLE);
+    if (!shaderBuf)
+      debugPrintf("Compilation failed for:\n%s\n", *string);
     glShaderBinary(1, &shader, 0, shaderBuf, shaderSize);
 
     file = sceLibcBridge_fopen(path, "w");
